@@ -46,7 +46,7 @@ function ImageContainer({
           >
             {mediaPreview === null ? (
               <>
-                <Segment color={highlighted ? "green" : ""} placeholder basic>
+                <Segment color={highlighted ? "green" : "grey"} placeholder basic>
                   <Header icon>
                     <Icon
                       name="file image outline"

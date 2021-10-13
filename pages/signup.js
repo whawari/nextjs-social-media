@@ -7,8 +7,13 @@ import {
 } from "../components/Common/WelcomeMessage";
 import SocialMediaInputs from "../components/Common/SocialMediaInputs";
 import ImageContainer from "../components/Common/ImageContainer";
+import axios from "axios";
+import baseUrl from "../utils/baseUrl";
+import { registerUser } from "../utils/authUser";
+import uploadPic from "../utils/uploadPicToCloudinary";
 
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+let cancel;
 
 const Signup = () => {
   const [user, setUser] = useState({
@@ -49,8 +54,23 @@ const Signup = () => {
     setUser((previousState) => ({ ...previousState, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setFormLoading(true);
+
+    let profilePicUrl;
+    if (media !== null) {
+      profilePicUrl = await uploadPic(media);
+    }
+
+    if (media !== null && !profilePicUrl) {
+      setFormLoading(false);
+
+      return setErrorMessage("Error uploading image");
+    }
+
+    await registerUser(user, profilePicUrl, setErrorMessage, setFormLoading);
   };
 
   useEffect(() => {
@@ -60,6 +80,39 @@ const Signup = () => {
 
     isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
   }, [user]);
+
+  const checkUsername = async () => {
+    setUsernameLoading(true);
+
+    try {
+      cancel && cancel();
+
+      const CancelToken = axios.CancelToken;
+      const res = await axios.get(`${baseUrl}/api/signup/${username}`, {
+        cancelToken: new CancelToken((canceler) => {
+          cancel = canceler;
+        }),
+      });
+
+      if (errorMessage !== null) {
+        setErrorMessage(null);
+      }
+
+      if (res.data === "Available") {
+        setUsernameAvailable(true);
+        setUser((previousState) => ({ ...previousState, username }));
+      }
+    } catch (error) {
+      setErrorMessage("Username not available");
+      setUsernameAvailable(false);
+    }
+
+    setUsernameLoading(false);
+  };
+
+  useEffect(() => {
+    username === "" ? setUsernameAvailable(false) : checkUsername();
+  }, [username]);
 
   return (
     <>

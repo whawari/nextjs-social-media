@@ -11,7 +11,7 @@ export const HeaderMessage = () => {
       color="teal"
       attached
       header={signupRoute ? "Get Started" : "Welcome Back"}
-      icon={signupRoute ? "Settings" : "Privacy"}
+      icon={signupRoute ? "settings" : "privacy"}
       content={
         signupRoute ? "Create New Account" : "Login with Email and Password"
       }
