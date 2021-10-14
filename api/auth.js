@@ -5,6 +5,23 @@ const FollowerModel = require("../models/FollowerModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
+const authMiddleware = require("../middleware/authMiddleware");
+
+router.get("/", authMiddleware, async (req, res) => {
+  const { userId } = req;
+
+  try {
+    const user = await UserModel.findById(userId);
+
+    const userFollowStats = await FollowerModel.findOne({ user: userId });
+
+    return res.status(200).json({ user, userFollowStats });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).send("Server error");
+  }
+});
 
 router.post("/", async (req, res) => {
   const { email, password } = req.body.user;
@@ -32,7 +49,7 @@ router.post("/", async (req, res) => {
       return res.status(401).send("Invalid Credentials");
     }
 
-    const payload = { userID: user._id };
+    const payload = { userId: user._id };
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
