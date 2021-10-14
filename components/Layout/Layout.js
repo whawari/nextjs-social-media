@@ -12,7 +12,7 @@ import {
 import nProgress from "nprogress";
 import Router from "next/router";
 import SideMenu from "./SideMenu";
-import Search from "./Search";
+import SearchComponent from "./SearchComponent";
 
 function Layout({ children, user }) {
   const contextRef = createRef();
@@ -43,7 +43,7 @@ function Layout({ children, user }) {
                 <Grid.Column floated="left" width={4}>
                   <Sticky context={contextRef}>
                     <Segment basic>
-                      <Search />
+                      <SearchComponent />
                     </Segment>
                   </Sticky>
                 </Grid.Column>
