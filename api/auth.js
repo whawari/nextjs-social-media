@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
       return res.status(401).send("Invalid Credentials");
     }
 
-    const payload = { userID: user._id };
+    const payload = { userId: user._id };
     jwt.sign(
       payload,
       process.env.JWT_SECRET,

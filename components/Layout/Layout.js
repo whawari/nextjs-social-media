@@ -7,7 +7,6 @@ import {
   Grid,
   Sticky,
   Ref,
-  Divider,
   Segment,
 } from "semantic-ui-react";
 import nProgress from "nprogress";
@@ -17,6 +16,7 @@ import Search from "./Search";
 
 function Layout({ children, user }) {
   const contextRef = createRef();
+
   Router.onRouteChangeStart = () => nProgress.start();
   Router.onRouteChangeComplete = () => nProgress.done();
   Router.onRouteChangeError = () => nProgress.done();
@@ -27,7 +27,7 @@ function Layout({ children, user }) {
 
       {user ? (
         <>
-          <div style={{ marginInline: "1rem" }}>
+          <div style={{ marginLeft: "1rem", marginRight: "1rem" }}>
             <Ref innerRef={contextRef}>
               <Grid>
                 <Grid.Column floated="left" width={2}>
